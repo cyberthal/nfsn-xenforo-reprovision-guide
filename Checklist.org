@@ -1,0 +1,162 @@
+* Checklist to Reprovision NFS.N Xenforo Site
+
+** NFS.N interface
+
+Delete old site
+
+Create new site: SITENAME
+- standard php- and cgi- enabled variant
+- turn on logfile, rotate 1 week
+
+** Terminal ssh in
+
+*** raise cputime limit
+
+ ulimit -t 300
+
+*** install Spacemacs
+
+ manually enable magit layer
+
+*** Github
+
+**** create ssh key
+
+if re-provisioning the server from scratch, you'll have to generate an ssh key, then add it to your github account
+
+ssh-keygen -t rsa -C "leo.little.book@gmail.com"
+
+**** tarsnap dotfile
+
+mkdir ~/1-mansort/git-/hub
+git clone git@github.com:cyberthal/dotfiles-nfsn.git
+
+** GUI Spacemacs TRAMP 
+
+*** eshell:
+
+mkdir /home/private/tarsnap/
+
+*** split-pane dired
+
+Copy prior SITENAME read-write key to 
+/home/private/tarsnap/
+
+symlink ~/1-mansort/git-/hub/.tarsnaprc to ~/
+
+*** eshell
+
+tarsnap --list-archives | sort
+
+copy latest good filename
+
+** Terminal bash
+
+pick a temp holding directory
+
+tarsnap -x -f [archive name]
+
+be patient when running restore.  it won't give any progress indicators, but it is creating the files silently.  wait for it to finish.  
+
+** Spacemacs GUI
+
+mkdir /home/protected/backup/
+move restored archive there
+
+chown and chgroup /backup/
+dired: 
+M 775
+G web
+
+extract the code archive tarball to /home/public/
+
+the tarball preserved the full path.  don't need to pre-create the target dir structure.
+
+** phpmyadmin
+
+*** database replacement
+
+drop the old database
+
+create new one named
+SITENAME
+
+encoding:
+utf8mb4_general_ci
+
+*** user replacement
+
+prior user name was "admin"
+that was a mistake
+remove "admin"'s privileges to individual databases
+create a new user named "SITENAME"
+you will need to edit /xf/library/config.php after this
+
+set Host field to
+%
+
+generate password using provided button
+
+give it all database-specific privileges for SITENAME except "grant"
+
+*** import the sql dump
+
+must run in raw terminal ssh: 
+
+mysql --host=leo3.db --user=SITENAME --password=FOOBAR SITENAME </home/protected/backup/FILENAME.sql
+
+*** edit config.php
+
+xf instructions next step: 
+> Edit the /library/config.php file in your new /test directory and change the database details to match your new test database
+
+
+may take this opportunity to add the trailing ?> to the config.php if it's missing.
+
+ignore the superusers line.  it has nothing to do with mysql.
+
+** Terminal Spacemacs
+
+clone xenforo-config repo
+symlink .htaccess to /public/ folder. 
+
+** test xenforo installation
+
+goto 
+http://SITENAME.nfshost.com/xf/index.php
+login, make a post
+
+test run the backup cron jobs - db and code. 
+http://SITENAME.nfshost.com/xf/admin.php?cron/
+
+** setup tarsnap chron job
+
+*** add tarsnap-backup.sh to FS
+
+go to nfsn-dotfiles repo
+symlink .profile into ~/
+symlink tarsnap-backup.sh into ~/tarsnap
+
+test run it.  might need to fiddle with permissions.  make executable 777 maybe.  no risk if it is. 
+
+*** add to nfs.n web interface
+https://members.nearlyfreespeech.net/leo3/sites/SITENAME/cron
+
+name
+tarnsapdaily
+
+command
+/home/private/tarsnap/tarsnap-backup.sh
+
+frequency: daily
+
+**** notes on cron-job collision possibility
+
+ Every 12 hours would be preferable just in case backup creation unluckily overlaps with uploading.  I haven't bothered to ensure that this unlikely situation doesn't occur.  Different time zone fiddling would be involved.  Making sure that the xenforo cron job is set for a different hour.
+
+ Another option would be to backup hourly.  Which seems excessive, and would result in many identical backups!  But is maybe not so bad?  Depending on how easy it is to remove identical backups.  Meh.
+
+ For now I solve this by keeping two days worth of backups around.  So even if the latest one is a collision, the older one won't be.  This has the disadvantage of risking 24-48 hours data loss.  
+
+ However, the archive I recovered most recently wasn't a collision, so it isn't a problem for this install, at this size, yet. 
+ [2016-11-03 Thu 10:26]

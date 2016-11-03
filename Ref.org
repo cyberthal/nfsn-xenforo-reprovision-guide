@@ -1,0 +1,95 @@
+* NFS.N Xenforo Site Reprovision - Reference
+** NFS.N 
+
+*** site names
+
+ No longer permits dashes in primary site alias.
+ Thus can't follow prior naming scheme.  
+
+*** MySQL
+
+**** command template to load an sql dump
+
+ [[ https://faq.nearlyfreespeech.net/full/mysqlcommandline#mysqlcommandline][CLI]]
+
+  If you need to redirect input (for example to load a MySQL dump file), you will additionally have to specify the MySQL password on the command line, like so:
+
+   YourPrompt> mysql --host=example.db --user=username --password=password Database <database.sql
+
+**** non-local [[id:51282489-8be6-4e8d-ba33-fe8c5c7ab16d][/Topic/Tech/NFS.N/MySQL Reference]]
+*** Phpmyadmin
+
+**** user creation "Host" field = %
+note for the user creation host field: 
+https://faq.nearlyfreespeech.net/section/mysql/mysqluserhost#mysqluserhost
+> The MySQL "user" table that controls who can access your MySQL process contains a "Host" field that controls what hosts can connect as that user. No matter how you create MySQL users, when using our service, you should always make sure the "Host" field contains only the % character.
+
+**** how to add a database and user
+
+see [[http://webvaultwiki.com.au/(S(iungfwenvz2f5c55pioeinil))/Default.aspx?Page=Create-Mysql-Database-User-Phpmyadmin&NS=&AspxAutoDetectCookieSupport=1][howto guide]]
+** SSH
+
+*** Emacs
+
+**** Connecting
+
+it's bookmarked.
+
+ C-x d /ssh:user@remotehost:filename
+
+ /ssh:leo3_SITENAME@ssh.phx.nearlyfreespeech.net:/home/
+
+**** bad ls switch issue with freeBSD
+
+**** Terminal vs GUI: strengths, weaknesses and issues
+
+***** GUI
+
+ GUI magit won't work over tramp.
+ must use spacemacs thru ssh'd terminal instead
+
+can't go too fast when creating dirs over tramp in spacemacs or the autocomplete doesn't catch up and it error fails. 
+
+without ssh: prefix, TRAMP scp encounters bad ls switch issue.
+C-u s allows editing ls switches interactively
+
+***** Terminal
+
+only host->remote clipboard integration on terminal emacs. 
+Use GUI spacemacs to copy remote->vbox
+
+
+*** terminal
+
+ssh leo3_SITENAME@ssh.phx.nearlyfreespeech.net
+
+terminal doesn't send my hyper and winkeys, unsurprisingly.
+
+** Tarsnap
+
+*** command snippets from manual
+
+tarsnap {--list-archives} --keyfile key-file
+
+**** Register with the server and generate keys
+
+tarsnap-keygen --keyfile /usr/tarsnap.key --user me@example.com --machine myserver
+
+target dir must already exist
+email address = 
+leo.little.book@gmail.com
+
+case sensitive
+
+** Directory tree
+
+where does the keyfile go? 
+/home/private/tarsnap/tarsnap.key
+
+** Xenforo
+
+[[ https://xenforo.com/community/threads/how-to-duplicate-a-live-site-to-use-as-a-test-site.67118/][How to duplicate a live site]]
+
+** My Github account
+
+https://github.com/cyberthal
