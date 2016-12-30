@@ -35,9 +35,12 @@ see [[http://webvaultwiki.com.au/(S(iungfwenvz2f5c55pioeinil))/Default.aspx?Page
 
 it's bookmarked.
 
+Emacs syntax: 
  C-x d /ssh:user@remotehost:filename
 
- /ssh:leo3_SITENAME@ssh.phx.nearlyfreespeech.net:/home/
+Adjusted for NFS.N:
+C-x d
+/ssh:leo3_SITENAME@ssh.phx.nearlyfreespeech.net:/home/
 
 **** bad ls switch issue with freeBSD
 
@@ -63,7 +66,7 @@ Use GUI spacemacs to copy remote->vbox
 
 ssh leo3_SITENAME@ssh.phx.nearlyfreespeech.net
 
-terminal doesn't send my hyper and winkeys, unsurprisingly.
+^replace sitename.  don't word delete past the @
 
 ** Tarsnap
 
